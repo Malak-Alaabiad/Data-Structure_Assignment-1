@@ -88,7 +88,7 @@ May your Iftar gatherings be full of warmth and blessings!
 ## Running Test Cases
 To run test cases, execute:
 ```bash
-python test_iftar_manager.py
+python send_email.py
 ```
 
 ## Dependencies
