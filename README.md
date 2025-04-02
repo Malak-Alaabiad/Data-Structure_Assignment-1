@@ -1,67 +1,102 @@
-# Road Damage Detection - Assignment 1
+# Iftar Invitation Management System
 
-## 📌 Project Overview
-This project is a **Road Damage Detection System** developed as part of **DSA Assignment 1**. It utilizes a machine learning model to identify potholes and cracks in road images. The project includes a Python script to process images and send email reports.
+## Description
+This project is a Python-based Object-Oriented program designed to help Fatima track Iftar invitations for her friends and family. The system allows her to store guest information, update invitations, send reminders, and sort the guest list by date.
 
-## 📁 Repository Structure
+## Features
+- Store guest details including name, contact, and invitation date.
+- Display a list of all invited guests.
+- Update invitation details if guests are added or removed.
+- Send reminder emails to guests on a specific date.
+- Sort the guest list by invitation date using a sorting algorithm.
+- Includes test cases to ensure the program functions correctly.
+
+## Classes and Methods
+### `Guest` Class
+Each guest has the following attributes:
+- `name` (string) – Guest's name.
+- `contact` (string) – Guest's phone number or email.
+- `iftar_date` (string) – Date of invitation.
+
+Methods:
+- `display_guest()`: Prints guest details.
+- `update_invitation(new_date)`: Updates the invitation date.
+
+### `IftarManager` Class
+Manages multiple invitations:
+- `guest_list` (list) – Stores multiple `Guest` objects.
+
+Methods:
+- `add_guest(guest)`: Adds a new guest.
+- `display_all_guests()`: Displays all invited guests.
+- `update_guest_invitation(name, new_date)`: Updates a guest's invitation date.
+- `send_reminder(date)`: Sends reminder messages to guests via email.
+- `sort_guest_list()`: Sorts guests by invitation date.
+
+## How It Works
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/Malak-Alaabiad/Data-Structure_Assignment-1.git
+   ```
+2. Navigate to the project directory:
+   ```bash
+   cd Data-Structure_Assignment-1
+   ```
+3. Run the main script:
+   ```bash
+   python main.py
+   ```
+
+### Example Usage
+```python
+# Create Iftar Manager
+manager = IftarManager()
+
+# Add guests
+guest1 = Guest("Aisha", "aisha@example.com", "2025-03-15")
+guest2 = Guest("Omar", "omar@example.com", "2025-03-18")
+guest3 = Guest("Zainab", "zainab@example.com", "2025-03-20")
+manager.add_guest(guest1)
+manager.add_guest(guest2)
+manager.add_guest(guest3)
+
+# Display guest list
+manager.display_all_guests()
+
+# Update invitation date
+manager.update_guest_invitation("Omar", "2025-03-15")
+
+# Send reminders
+manager.send_reminder("2025-03-15")
 ```
-📂 DSA_Assignments
-   📂 Assignment_1
-       📂 venv/                     # Virtual environment (not included in repo)
-       📂 dataset/                   # Images for detection
-       📂 models/                    # Trained model files
-       📂 scripts/                   # Helper scripts
-       ├── send_email.py             # Script to send email reports
-       ├── detect_potholes.py        # Main detection script
-       ├── requirements.txt          # Dependencies list
-       ├── README.md                 # Documentation
+
+### Expected Output
+```
+Guest: Aisha, Contact: aisha@example.com, Iftar Date: 2025-03-15
+Guest: Omar, Contact: omar@example.com, Iftar Date: 2025-03-18
+Guest: Zainab, Contact: zainab@example.com, Iftar Date: 2025-03-20
+Updating invitation for Omar...
+Guest: Aisha, Contact: aisha@example.com, Iftar Date: 2025-03-15
+Guest: Omar, Contact: omar@example.com, Iftar Date: 2025-03-15
+Guest: Zainab, Contact: zainab@example.com, Iftar Date: 2025-03-20
+Sending reminders...
+Reminder sent to Aisha: Your Iftar invitation is on 2025-03-15!
+Reminder sent to Omar: Your Iftar invitation is on 2025-03-15!
+May your Iftar gatherings be full of warmth and blessings!
 ```
 
-## 🛠️ Installation
-### 1️⃣ Clone the Repository
-```sh
-git clone https://github.com/yourusername/road-damage-detection.git
-cd road-damage-detection/Assignment_1
+## Running Test Cases
+To run test cases, execute:
+```bash
+python test_iftar_manager.py
 ```
 
-### 2️⃣ Set Up Virtual Environment
-```sh
-python -m venv venv
-venv\Scripts\activate  # Windows
-source venv/bin/activate  # macOS/Linux
-```
+## Dependencies
+- Python 3.x
+- smtplib (for sending emails)
 
-### 3️⃣ Install Dependencies
-```sh
-pip install -r requirements.txt
-```
-
-## 🚀 How It Works
-### 1️⃣ Run the Detection Script
-To detect potholes in images, run:
-```sh
-python detect_potholes.py --image dataset/sample.jpg
-```
-This will process the image and output a detection result.
-
-### 2️⃣ Send an Email Report
-To send a detection report via email:
-```sh
-python send_email.py recipient@example.com "2025-04-02"
-```
-Replace `recipient@example.com` with the recipient's email address.
-
-## 🛠️ Troubleshooting
-If you encounter issues:
-- Ensure your virtual environment is activated.
-- Check if all dependencies are installed (`pip list`).
-- Verify the Python path if running in PowerShell.
-
-## 📝 License
-This project is licensed under the **MIT License**.
-
-## 💡 Contributing
-Feel free to submit issues or pull requests to improve the project!
+## Author
+Malak Alabiad
 
 ---
-📩 **Contact:** [malakkalaabiadd@gmail.com ]
+Enjoy organizing your Iftar invitations! 🌙
