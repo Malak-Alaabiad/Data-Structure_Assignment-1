@@ -61,6 +61,7 @@ class IftarManager {
 private:
     Guest** guest_list;
     int count;
+    int no_guests;
     int capacity;
 public:
     // Constructor to initialize manager with default capacity
@@ -78,9 +79,38 @@ public:
 
     // Add a guest to the list
     void add_guest(Guest* guest) {
-        if (count == capacity) return;
+        // Check if the guest already exists by name
+        for (int i = 0; i < count; ++i) {
+            if (strcmp(guest_list[i]->get_name(), guest->get_name()) == 0) {
+                delete guest; // Don't forget to free memory for unused guest
+                return;
+            }
+        }
+
+        // Ensure capacity is not exceeded
+        if (count == capacity) {
+            cout << "Guest list is full. Cannot add more guests.\n";
+            delete guest;
+            return;
+        }
+
+        // Add to dynamic list
         guest_list[count++] = guest;
+        no_guests++;
+
+        // Append to file
+        ofstream file("guests.txt", ios::app); // append mode
+        if (file) {
+            file << guest->get_name() << " "
+                 << guest->get_contact() << " "
+                 << guest->get_date() << "\n";
+            file.close();
+        } else {
+            cout << "Error: Unable to open file to save new guest.\n";
+        }
     }
+
+
 
     // Load guests from a file
     void load_guests_from_file(const char* filename) {
@@ -102,6 +132,50 @@ public:
             guest_list[i]->display_guest();
         }
     }
+
+    void remove_guest(const char* name) {
+        bool found = false;
+        for (int i = 0; i < count; ++i) {
+            if (strcmp(guest_list[i]->get_name(), name) == 0) {
+                found = true;
+
+                // Delete the guest object
+                delete guest_list[i];
+
+                // Shift the array left
+                for (int j = i; j < count - 1; ++j) {
+                    guest_list[j] = guest_list[j + 1];
+                }
+
+                count--;
+                no_guests--;
+                break;
+            }
+        }
+
+        if (!found) {
+            cout << "Guest \"" << name << "\" not found!\n";
+            return;
+        }
+
+        // Rewrite the file with the updated guest list
+        ofstream file("guests.txt");
+        if (!file) {
+            cout << "Error: Could not update guest file!\n";
+            return;
+        }
+
+        for (int i = 0; i < count; ++i) {
+            file << guest_list[i]->get_name() << " "
+                 << guest_list[i]->get_contact() << " "
+                 << guest_list[i]->get_date() << "\n";
+        }
+
+        file.close();
+        cout << "Guest \"" << name << "\" removed and file updated.\n";
+    }
+
+
 
     // Update invitation date for a specific guest
     void update_guest_invitation(const char* name, const char* new_date) {
@@ -155,9 +229,10 @@ int main() {
         cout << " 2.  Add New Guest\n";
         cout << " 3.  Update Guest's Invitation Date\n";
         cout << " 4.  Send Reminder Emails\n";
-        cout << " 5.  Exit Program\n";
+        cout << " 5.  Remove Guest\n";
+        cout << " 6.  Exit Program\n";
         cout << "-----------------------------------------\n";
-        cout << "   Enter your choice (1-5): ";
+        cout << "   Enter your choice (1-6): ";
         cin >> choice;
         cout << "=========================================\n";
 
@@ -187,8 +262,14 @@ int main() {
                 manager.send_reminders(date);
                 break;
             case 5:
+                cout << "\n  Enter Guest Name to Remove: ";
+                cin >> name;
+                manager.remove_guest(name);
+                break;
+            case 6:
                 cout << "\n  Exiting program... Ramadan Kareem!\n";
                 break;
+
             default:
                 cout << "\n   Invalid choice. Please try again.\n";
         }
