@@ -11,17 +11,17 @@ int main(){
         statisticalCalculation.inputData();
         statisticalCalculation.statisticsMenu();
     }
-else if(fileName == "test_double.txt"){
-    StatisticalCalculation<double> statisticalCalculation(1);
-    statisticalCalculation.setFileName("test_double.txt");
-    statisticalCalculation.inputData();
-    statisticalCalculation.statisticsMenu();
-}
-else if(fileName == "test_float.txt"){
-    StatisticalCalculation<float> statisticalCalculation(1);
-    statisticalCalculation.setFileName("test_float.txt");
-    statisticalCalculation.inputData();
-    statisticalCalculation.statisticsMenu();
-}
+    else if(fileName == "test_double.txt"){
+        StatisticalCalculation<double> statisticalCalculation(1);
+        statisticalCalculation.setFileName("test_double.txt");
+        statisticalCalculation.inputData();
+        statisticalCalculation.statisticsMenu();
+    }
+    else if(fileName == "test_float.txt"){
+        StatisticalCalculation<float> statisticalCalculation(1);
+        statisticalCalculation.setFileName("test_float.txt");
+        statisticalCalculation.inputData();
+        statisticalCalculation.statisticsMenu();
+    }
     return 0;
 }
