@@ -19,10 +19,9 @@ void StatisticalCalculation<T>::sort() {
     for (int i = 0; i < size - 1; i++) {
         for (int j = 0; j < size - i - 1; j++) {
             if (data[j] > data[j + 1]) {
-                // Swap elements
-                T temp = data[j];
-                data[j] = data[j + 1];
-                data[j + 1] = temp;
+               data[j] = data[j ]^data[j+1];
+               data[j+1] = data[j]^data[j+1];
+               data[j] = data[j ]^data[j+1];
             }
         }
     }
@@ -82,12 +81,15 @@ void StatisticalCalculation<T>::displayArray() {
 }
 
 template <typename T>
+void StatisticalCalculation<T>::setFileName(const string& fname) {
+    fileName = fname;
+}
+template <typename T>
 void StatisticalCalculation<T>::inputData() {
-    string filename = "test.txt";
-    ifstream inputFile(filename);
+    ifstream inputFile(fileName);
 
     if (!inputFile.is_open()) {
-        cerr << "Error: Could not open file " << filename << endl;
+        cerr << "Error: Could not open file " << fileName << endl;
         return;
     }
 
@@ -108,8 +110,9 @@ void StatisticalCalculation<T>::inputData() {
     }
 
     inputFile.close();
-    cout << "Successfully read " << size << " elements from " << filename << endl;
+    cout << "Successfully read " << size << " elements from " << fileName << endl;
 }
+
 
 template <typename T>
 void StatisticalCalculation<T>::statisticsMenu() {
@@ -156,6 +159,7 @@ void StatisticalCalculation<T>::statisticsMenu() {
         }
         menu = true;
     }
+
 }
 
 // Explicit template instantiation

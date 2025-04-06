@@ -4,6 +4,7 @@ class StatisticalCalculation{
 private:
     T* data;
     int size;
+    string fileName;
 public:
     StatisticalCalculation(int size);
     ~StatisticalCalculation();
@@ -16,4 +17,6 @@ public:
     void displayArray();
     void inputData();
     void statisticsMenu();
+    void setFileName(string& fileName);
+
 };
