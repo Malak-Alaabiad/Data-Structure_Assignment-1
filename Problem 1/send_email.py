@@ -9,9 +9,28 @@ EMAIL_PASSWORD = "umce hplw fftf twjw"
 
 def send_email(recipient, date):
     subject = "Iftar Invitation Reminder"
-    body = f"Dear guest,\n\nThis is a reminder that your Iftar invitation is scheduled for {date}.\n\nBest regards,\nIftar Manager"
 
-    # Email message setup
+    body = f"""Dear Guest,
+
+We hope this message finds you well.
+
+This is a kind reminder that you are cordially invited to our upcoming Iftar gathering scheduled for {date}. 
+We would be honored by your presence.
+
+Event Details:
+- 📅 Date: {date}
+- 🕠 Time: 5:45 PM (Maghrib)
+- 📍 Location: FCAI-CU
+
+Please confirm your attendance at your earliest convenience so we can make the necessary arrangements accordingly.
+
+Should you have any questions or require assistance, feel free to reach out to us.
+
+Warm regards,  
+Iftar Management Team  
+📧 malakkalaabiadd@gmail.com@  
+"""
+
     msg = MIMEMultipart()
     msg["From"] = EMAIL_ADDRESS
     msg["To"] = recipient
@@ -19,13 +38,12 @@ def send_email(recipient, date):
     msg.attach(MIMEText(body, "plain"))
 
     try:
-        # Connect to Gmail SMTP server
         server = smtplib.SMTP("smtp.gmail.com", 587)
         server.starttls()
         server.login(EMAIL_ADDRESS, EMAIL_PASSWORD)
         server.sendmail(EMAIL_ADDRESS, recipient, msg.as_string())
         server.quit()
-        print(f"Email sent to {recipient}")
+        print(f"Email successfully sent to {recipient}")
     except Exception as e:
         print(f"Failed to send email: {e}")
 
