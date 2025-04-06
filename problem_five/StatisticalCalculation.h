@@ -1,9 +1,12 @@
 #include <iostream>
+#include <string>
+
 template <typename T>
-class StatisticalCalculation{
+class StatisticalCalculation {
 private:
     T* data;
     int size;
+    std::string fileName;
 public:
     StatisticalCalculation(int size);
     ~StatisticalCalculation();
@@ -16,4 +19,5 @@ public:
     void displayArray();
     void inputData();
     void statisticsMenu();
+    void setFileName(const std::string& fileName);
 };

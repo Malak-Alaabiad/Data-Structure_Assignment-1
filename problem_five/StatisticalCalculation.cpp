@@ -19,7 +19,6 @@ void StatisticalCalculation<T>::sort() {
     for (int i = 0; i < size - 1; i++) {
         for (int j = 0; j < size - i - 1; j++) {
             if (data[j] > data[j + 1]) {
-                // Swap elements
                 T temp = data[j];
                 data[j] = data[j + 1];
                 data[j + 1] = temp;
@@ -82,20 +81,31 @@ void StatisticalCalculation<T>::displayArray() {
 }
 
 template <typename T>
+void StatisticalCalculation<T>::setFileName(const std::string& fname) {
+    fileName = fname;
+}
+template <typename T>
 void StatisticalCalculation<T>::inputData() {
-    string filename = "test.txt";
-    ifstream inputFile(filename);
+    ifstream inputFile(fileName);
 
     if (!inputFile.is_open()) {
-        cerr << "Error: Could not open file " << filename << endl;
+        cerr << "Error: Could not open file " << fileName << endl;
         return;
     }
 
-    inputFile >> size;
+    int newSize;
+    inputFile >> newSize;
+
+    if (newSize <= 0) {
+        cerr << "Error: Invalid size in file " << fileName << endl;
+        inputFile.close();
+        return;
+    }
 
     if (data != nullptr) {
         delete[] data;
     }
+    size = newSize;
     data = new T[size];
 
     for (int i = 0; i < size; i++) {
@@ -108,14 +118,15 @@ void StatisticalCalculation<T>::inputData() {
     }
 
     inputFile.close();
-    cout << "Successfully read " << size << " elements from " << filename << endl;
+    cout << "Successfully read " << size << " elements from " << fileName << endl;
 }
+
 
 template <typename T>
 void StatisticalCalculation<T>::statisticsMenu() {
     int userChoice;
-    bool menu = false;
-    while (!menu) {
+    bool menu = true;
+    while (menu) {
         cout << "Select a statistical calculation:" << endl;
         cout << "1. Find Median" << endl;
         cout << "2. Find Minimum" << endl;
@@ -148,16 +159,16 @@ void StatisticalCalculation<T>::statisticsMenu() {
                 break;
             case 7:
                 cout << "Exiting the program." << endl;
-                menu = true;
+                menu = false;
                 break;
             default:
                 cout << "Invalid choice. Please try again." << endl;
-                continue;
+                break;
         }
-        menu = true;
     }
 }
 
 // Explicit template instantiation
 template class StatisticalCalculation<double>;
 template class StatisticalCalculation<int>;
+template class StatisticalCalculation<float>;
