@@ -40,7 +40,7 @@ public:
 
     // Display guest information
     void display_guest() {
-        cout << "\nGuest: " << name << ", Contact: " << get_contact() << ", Iftar Date: " << iftar_date << endl;
+        cout << "\nGuest: " << name << ", Contact Email: " << get_contact() << ", Iftar Date: " << iftar_date << endl;
     }
 
     // Update invitation date
@@ -86,7 +86,7 @@ public:
     void load_guests_from_file(const char* filename) {
         ifstream file(filename);
         if (!file) {
-            cout << "\nError opening file!\n";
+            cout << "\nOops!!Error opening file...\n";
             return;
         }
         char name[50], contact[50], date[15];
@@ -137,7 +137,7 @@ public:
                 send_real_email(guest_list[i]->get_contact(), date);
             }
         }
-        cout << "Emails sent successfully!\n";
+        cout << "Emails sent successfully!!\n";
     }
 };
 
@@ -148,39 +148,49 @@ int main() {
     int choice;
     char name[50], contact[50], date[15];
     do {
-        cout << "\nIftar Invitation Manager";
-        cout << "\n1. Display All Guests";
-        cout << "\n2. Add Guest";
-        cout << "\n3. Update Invitation Date";
-        cout << "\n4. Send Reminders";
-        cout << "\n5. Exit";
-        cout << "\nEnter your choice: ";
+        cout << "\n=========================================\n";
+        cout << "           IFTAR INVITATION MANAGER         \n";
+        cout << "=========================================\n";
+        cout << " 1.  Display All Guests\n";
+        cout << " 2.  Add New Guest\n";
+        cout << " 3.  Update Guest's Invitation Date\n";
+        cout << " 4.  Send Reminder Emails\n";
+        cout << " 5.  Exit Program\n";
+        cout << "-----------------------------------------\n";
+        cout << "   Enter your choice (1-5): ";
         cin >> choice;
+        cout << "=========================================\n";
 
         switch (choice) {
             case 1:
                 manager.display_all_guests();
                 break;
             case 2:
-                cout << "\nEnter name, contact, and iftar date: ";
-                cin >> name >> contact >> date;
+                cout << "\n  Enter Guest Name: ";
+                cin >> name;
+                cout << "  Enter Contact Email: ";
+                cin >> contact;
+                cout << "  Enter Iftar Date (YYYY-MM-DD): ";
+                cin >> date;
                 manager.add_guest(new Guest(name, contact, date));
                 break;
             case 3:
-                cout << "\nEnter guest name and new date: ";
-                cin >> name >> date;
+                cout << "\n  Enter Guest Name: ";
+                cin >> name;
+                cout << "  Enter New Iftar Date (YYYY-MM-DD): ";
+                cin >> date;
                 manager.update_guest_invitation(name, date);
                 break;
             case 4:
-                cout << "\nEnter date to send reminders: ";
+                cout << "\n  Enter Date to Send Reminders (YYYY-MM-DD): ";
                 cin >> date;
                 manager.send_reminders(date);
                 break;
             case 5:
-                cout << "\nExiting program...\n";
+                cout << "\n  Exiting program... Ramadan Kareem!\n";
                 break;
             default:
-                cout << "\nInvalid choice, please try again.\n";
+                cout << "\n   Invalid choice. Please try again.\n";
         }
     } while (choice != 5);
 
