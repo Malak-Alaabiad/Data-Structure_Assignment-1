@@ -40,7 +40,7 @@ public:
 
     // Display guest information
     void display_guest() {
-        cout << "\nGuest: " << name << ", Contact: " << get_contact() << ", Iftar Date: " << iftar_date << endl;
+        cout << "\nGuest: " << name << ", Contact Email: " << get_contact() << ", Iftar Date: " << iftar_date << endl;
     }
 
     // Update invitation date
@@ -61,6 +61,7 @@ class IftarManager {
 private:
     Guest** guest_list;
     int count;
+    int no_guests;
     int capacity;
 public:
     // Constructor to initialize manager with default capacity
@@ -78,15 +79,44 @@ public:
 
     // Add a guest to the list
     void add_guest(Guest* guest) {
-        if (count == capacity) return;
+        // Check if the guest already exists by name
+        for (int i = 0; i < count; ++i) {
+            if (strcmp(guest_list[i]->get_name(), guest->get_name()) == 0) {
+                delete guest; // Don't forget to free memory for unused guest
+                return;
+            }
+        }
+
+        // Ensure capacity is not exceeded
+        if (count == capacity) {
+            cout << "Guest list is full. Cannot add more guests.\n";
+            delete guest;
+            return;
+        }
+
+        // Add to dynamic list
         guest_list[count++] = guest;
+        no_guests++;
+
+        // Append to file
+        ofstream file("guests.txt", ios::app); // append mode
+        if (file) {
+            file << guest->get_name() << " "
+                 << guest->get_contact() << " "
+                 << guest->get_date() << "\n";
+            file.close();
+        } else {
+            cout << "Error: Unable to open file to save new guest.\n";
+        }
     }
+
+
 
     // Load guests from a file
     void load_guests_from_file(const char* filename) {
         ifstream file(filename);
         if (!file) {
-            cout << "\nError opening file!\n";
+            cout << "\nOops!!Error opening file...\n";
             return;
         }
         char name[50], contact[50], date[15];
@@ -102,6 +132,50 @@ public:
             guest_list[i]->display_guest();
         }
     }
+
+    void remove_guest(const char* name) {
+        bool found = false;
+        for (int i = 0; i < count; ++i) {
+            if (strcmp(guest_list[i]->get_name(), name) == 0) {
+                found = true;
+
+                // Delete the guest object
+                delete guest_list[i];
+
+                // Shift the array left
+                for (int j = i; j < count - 1; ++j) {
+                    guest_list[j] = guest_list[j + 1];
+                }
+
+                count--;
+                no_guests--;
+                break;
+            }
+        }
+
+        if (!found) {
+            cout << "Guest \"" << name << "\" not found!\n";
+            return;
+        }
+
+        // Rewrite the file with the updated guest list
+        ofstream file("guests.txt");
+        if (!file) {
+            cout << "Error: Could not update guest file!\n";
+            return;
+        }
+
+        for (int i = 0; i < count; ++i) {
+            file << guest_list[i]->get_name() << " "
+                 << guest_list[i]->get_contact() << " "
+                 << guest_list[i]->get_date() << "\n";
+        }
+
+        file.close();
+        cout << "Guest \"" << name << "\" removed and file updated.\n";
+    }
+
+
 
     // Update invitation date for a specific guest
     void update_guest_invitation(const char* name, const char* new_date) {
@@ -137,7 +211,7 @@ public:
                 send_real_email(guest_list[i]->get_contact(), date);
             }
         }
-        cout << "Emails sent successfully!\n";
+        cout << "Emails sent successfully!!\n";
     }
 };
 
@@ -148,39 +222,56 @@ int main() {
     int choice;
     char name[50], contact[50], date[15];
     do {
-        cout << "\nIftar Invitation Manager";
-        cout << "\n1. Display All Guests";
-        cout << "\n2. Add Guest";
-        cout << "\n3. Update Invitation Date";
-        cout << "\n4. Send Reminders";
-        cout << "\n5. Exit";
-        cout << "\nEnter your choice: ";
+        cout << "\n=========================================\n";
+        cout << "           IFTAR INVITATION MANAGER         \n";
+        cout << "=========================================\n";
+        cout << " 1.  Display All Guests\n";
+        cout << " 2.  Add New Guest\n";
+        cout << " 3.  Update Guest's Invitation Date\n";
+        cout << " 4.  Send Reminder Emails\n";
+        cout << " 5.  Remove Guest\n";
+        cout << " 6.  Exit Program\n";
+        cout << "-----------------------------------------\n";
+        cout << "   Enter your choice (1-6): ";
         cin >> choice;
+        cout << "=========================================\n";
 
         switch (choice) {
             case 1:
                 manager.display_all_guests();
                 break;
             case 2:
-                cout << "\nEnter name, contact, and iftar date: ";
-                cin >> name >> contact >> date;
+                cout << "\n  Enter Guest Name: ";
+                cin >> name;
+                cout << "  Enter Contact Email: ";
+                cin >> contact;
+                cout << "  Enter Iftar Date (YYYY-MM-DD): ";
+                cin >> date;
                 manager.add_guest(new Guest(name, contact, date));
                 break;
             case 3:
-                cout << "\nEnter guest name and new date: ";
-                cin >> name >> date;
+                cout << "\n  Enter Guest Name: ";
+                cin >> name;
+                cout << "  Enter New Iftar Date (YYYY-MM-DD): ";
+                cin >> date;
                 manager.update_guest_invitation(name, date);
                 break;
             case 4:
-                cout << "\nEnter date to send reminders: ";
+                cout << "\n  Enter Date to Send Reminders (YYYY-MM-DD): ";
                 cin >> date;
                 manager.send_reminders(date);
                 break;
             case 5:
-                cout << "\nExiting program...\n";
+                cout << "\n  Enter Guest Name to Remove: ";
+                cin >> name;
+                manager.remove_guest(name);
                 break;
+            case 6:
+                cout << "\n  Exiting program... Ramadan Kareem!\n";
+                break;
+
             default:
-                cout << "\nInvalid choice, please try again.\n";
+                cout << "\n   Invalid choice. Please try again.\n";
         }
     } while (choice != 5);
 
