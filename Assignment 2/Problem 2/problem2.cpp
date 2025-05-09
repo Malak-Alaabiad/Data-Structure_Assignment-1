@@ -25,7 +25,6 @@ public:
     AVLNode *left;
     AVLNode *right;
     int height;
-
     AVLNode(int k, Contact c) : id(k), contact(c), left(nullptr), right(nullptr), height(1){}
 };
 
@@ -33,6 +32,16 @@ class AVLTree
 {
 private:
     AVLNode *root;
+    static int maxLevel;
+
+    void updateMaxLevel() {
+        maxLevel = calculateMaxLevel(root);
+    }
+
+    int calculateMaxLevel(AVLNode* node) {
+        if (!node) return -1; // Base case: empty tree
+        return 1 + max(calculateMaxLevel(node->left), calculateMaxLevel(node->right));
+    }
 
     int height(AVLNode *node)
     {
@@ -110,6 +119,7 @@ private:
             return leftRotate(node);
         }
 
+        updateMaxLevel(); // Update max level after insertion
         return node;
     }
 
@@ -179,6 +189,7 @@ private:
             return leftRotate(root);
         }
 
+        updateMaxLevel(); // Update max level after deletion
         return root;
     }
 
@@ -201,6 +212,32 @@ private:
         if (id < root->id)
             return searchHelper(root->left, id);
         return searchHelper(root->right, id);
+    }
+
+    vector<vector<int>> levelOrderTraversal() {
+        vector<vector<int>> levels;
+        if (!root) return levels;
+
+        queue<AVLNode*> q;
+        q.push(root);
+        while (!q.empty()) {
+            int size = q.size();
+            vector<int> level;
+            for (int i = 0; i < size; ++i) {
+                AVLNode* node = q.front();
+                q.pop();
+                if (node) {
+                    level.push_back(node->id);
+                    q.push(node->left);
+                    q.push(node->right);
+                } else {
+                    level.push_back(-1); // Placeholder for null nodes
+                }
+            }
+            levels.push_back(level);
+        }
+        if(levels.size() > maxLevel) levels.pop_back();
+        return levels;
     }
 
 public:
@@ -242,7 +279,33 @@ public:
         inorder(root);
     }
 
+    void displayTree() {
+        vector<vector<int>> levels = levelOrderTraversal();
+        int depth = levels.size();
+    
+        for (int i = 0; i < depth; ++i) {
+            int betweenSpaces = (1 << (depth - i + 1)) - 1; // Calculate spaces between nodes
+            int leadingSpaces = (1 << (depth - i)) - 1; // Calculate leading spaces
+    
+            for (int j = 0; j < leadingSpaces; ++j) cout << " ";
+    
+            for (int j = 0; j < levels[i].size(); ++j) {
+                if (levels[i][j] != -1) {
+                    cout << levels[i][j];
+                } else {
+                    cout << " ";
+                }
+                if (j < levels[i].size() - 1) {
+                    for (int k = 0; k < betweenSpaces; ++k) cout << " ";
+                }
+            }
+    
+            cout << endl;
+        }
+    }
 };
+
+int AVLTree::maxLevel = -1;
 
 class AddressBook
 {
@@ -257,9 +320,10 @@ public:
         cout << "2. Search for Contact" << endl;
         cout << "3. Delete Contact" << endl;
         cout << "4. List All Contacts (Sorted by ID)" << endl;
-        cout << "5. Exit" << endl;
+        cout << "5. Display AVL Tree" << endl;
+        cout << "6. Exit" << endl;
         cout << "------------------------" << endl;
-        cout << "Enter operation (1-5): ";
+        cout << "Enter operation (1-6): ";
     }
     void addContact()
     {
@@ -267,13 +331,13 @@ public:
         cout << "Enter unique ID (integer): ";
         int id;
         cin >> id;
-        cout << "Enter Name: ";
-        cin.ignore(numeric_limits<streamsize>::max(), '\n');
-        getline(cin, c.name);
-        cout << "Enter Phone: ";
-        getline(cin, c.phoneNumber);
-        cout << "Enter Email: ";
-        getline(cin, c.email);
+        // cout << "Enter Name: ";
+        // cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        // getline(cin, c.name);
+        // cout << "Enter Phone: ";
+        // getline(cin, c.phoneNumber);
+        // cout << "Enter Email: ";
+        // getline(cin, c.email);
 
         if (avlTree.insert(id, c))
             cout << "Contact added successfully!" << endl;
@@ -327,6 +391,10 @@ public:
                 listContacts();
                 break;
             case 5:
+                avlTree.displayTree();
+                cout << endl;
+                break;
+            case 6:
                 cout << "Exiting..." << endl;
                 break;
             default:
