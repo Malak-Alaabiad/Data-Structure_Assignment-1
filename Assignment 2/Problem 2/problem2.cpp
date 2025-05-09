@@ -331,13 +331,13 @@ public:
         cout << "Enter unique ID (integer): ";
         int id;
         cin >> id;
-        // cout << "Enter Name: ";
-        // cin.ignore(numeric_limits<streamsize>::max(), '\n');
-        // getline(cin, c.name);
-        // cout << "Enter Phone: ";
-        // getline(cin, c.phoneNumber);
-        // cout << "Enter Email: ";
-        // getline(cin, c.email);
+        cout << "Enter Name: ";
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        getline(cin, c.name);
+        cout << "Enter Phone: ";
+        getline(cin, c.phoneNumber);
+        cout << "Enter Email: ";
+        getline(cin, c.email);
 
         if (avlTree.insert(id, c))
             cout << "Contact added successfully!" << endl;
