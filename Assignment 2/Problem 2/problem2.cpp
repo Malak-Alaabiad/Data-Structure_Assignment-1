@@ -1,14 +1,9 @@
 #include <bits/stdc++.h>
+#include "Vector.hpp"
+#include "Queue.hpp"
+
 using namespace std;
 #define endl '\n'
-#define ll long long
-#define ld long double
-#define ull unsigned long long
-#define MOD (ll)(1e9 + 7)
-#define sz(x) (ll)(x).size()
-#define all(x) (x).begin(), (x).end()
-#define rall(x) (x).rbegin(), (x).rend()
-#define fast ios_base::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr);
 
 struct Contact
 {
@@ -214,15 +209,15 @@ private:
         return searchHelper(root->right, id);
     }
 
-    vector<vector<int>> levelOrderTraversal() {
-        vector<vector<int>> levels;
+    Vector<Vector<int>> levelOrderTraversal() {
+        Vector<Vector<int>> levels;
         if (!root) return levels;
 
-        queue<AVLNode*> q;
+        Queue<AVLNode*> q;
         q.push(root);
         while (!q.empty()) {
             int size = q.size();
-            vector<int> level;
+            Vector<int> level;
             for (int i = 0; i < size; ++i) {
                 AVLNode* node = q.front();
                 q.pop();
@@ -280,11 +275,11 @@ public:
     }
 
     void displayTree() {
-        vector<vector<int>> levels = levelOrderTraversal();
+        Vector<Vector<int>> levels = levelOrderTraversal();
         int depth = levels.size();
     
         for (int i = 0; i < depth; ++i) {
-            int betweenSpaces = (1 << (depth - i + 1)) - 1; // Calculate spaces between nodes
+            int betweenSpaces = (1 << (depth - i + 1)); // Calculate spaces between nodes
             int leadingSpaces = (1 << (depth - i)) - 1; // Calculate leading spaces
     
             for (int j = 0; j < leadingSpaces; ++j) cout << " ";
